@@ -21,6 +21,8 @@ delaySys :: SysDef (Signal Bool -> Signal Bool)
 delaySys = newSysDef delayProc "DelaySys" ["input"] ["output"]
 
 -- Hardware Generation
+-- IMPORTANT: Programming the DE10 Standard:
+-- > quartus_pgm -c DE-SoC -m JTAG -o "p;./system/vhdl/system.sof@2"
 compileQuartus_DelaySystem :: IO ()
 compileQuartus_DelaySystem = writeVHDLOps vhdlOps delaySys
  where vhdlOps = defaultVHDLOps{execQuartus=Just quartusOps}
