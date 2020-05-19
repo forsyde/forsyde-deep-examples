@@ -56,3 +56,6 @@ compileQuartus_CounterSystem = writeVHDLOps vhdlOps system
                                           ("run_5", "PIN_AA24") -- LEDR[0]
                                          ]
                               }
+
+-- Modelsim
+testModelsim = writeAndModelsimVHDL Nothing counter_5_Sys [H,H,H]

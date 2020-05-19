@@ -20,11 +20,18 @@ delayProc = scanldSY "DelayProc" nextStateFun False
 delaySys :: SysDef (Signal Bool -> Signal Bool)
 delaySys = newSysDef delayProc "DelaySys" ["input"] ["output"]
 
--- Hardware Generation
+
+-- ==> Simulation with ModelSim
+testSimulationModelsim :: IO [Bool]
+testSimulationModelsim = writeAndModelsimVHDL Nothing delaySys [True, True, False]
+
+
+-- ==> Hardware Generation
+
 -- IMPORTANT: Programming the DE10 Standard:
--- > quartus_pgm -c DE-SoC -m JTAG -o "p;./system/vhdl/system.sof@2"
-compileQuartus_DelaySystem :: IO ()
-compileQuartus_DelaySystem = writeVHDLOps vhdlOps delaySys
+-- > quartus_pgm -c DE-SoC -m JTAG -o "p;./DelaySys/vhdl/DelaySys.sof@2"
+generateHW_DE_10_Standard :: IO ()
+generateHW_DE_10_Standard = writeVHDLOps vhdlOps delaySys
  where vhdlOps = defaultVHDLOps{execQuartus=Just quartusOps}
        quartusOps = QuartusOps{action=FullCompilation,
                                fMax=Just 50, -- in MHz
@@ -44,3 +51,4 @@ compileQuartus_DelaySystem = writeVHDLOps vhdlOps delaySys
                                           ("output", "PIN_AA24")   -- LEDR[0]
                                          ]
                               }
+                    
