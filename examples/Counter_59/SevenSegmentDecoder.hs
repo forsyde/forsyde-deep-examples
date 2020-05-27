@@ -34,30 +34,37 @@ sevenSegDecProc = mapSY "decode" decodeFun
 
 sevenSegDecSys :: SysDef (Signal Int8 -> Signal (FSVec D7 Bit))
 sevenSegDecSys = newSysDef sevenSegDecProc "sevenSegDec" ["in"] ["out"] 
- 
--- Hardware Generation
-compileQuartus_sevenSegDecSys :: IO ()
-compileQuartus_sevenSegDecSys = writeVHDLOps vhdlOps sevenSegDecSys
+
+-- ==> Simulation with Modelsim
+simulateModelsim :: [Int8] -> IO [FSVec D7 Bit]
+simulateModelsim = writeAndModelsimVHDL Nothing sevenSegDecSys
+
+-- ==> Hardware Generation
+
+-- IMPORTANT: Programming the DE10 Standard:
+-- > quartus_pgm -c DE-SoC -m JTAG -o "p;./sevenSegDec/vhdl/sevenSegDec.sof@2"
+generateHW_DE_10_Standard :: IO ()
+generateHW_DE_10_Standard = writeVHDLOps vhdlOps sevenSegDecSys
  where vhdlOps = defaultVHDLOps{execQuartus=Just quartusOps}
        quartusOps = QuartusOps{action=FullCompilation,
-                               fMax=Just 50, -- in MHz
-                               fpgaFamiliyDevice=Just ("CycloneII",
-                                                       Just "EP2C35F672C6"),
+                               fMax=Just 24, -- in MHz
+                               fpgaFamiliyDevice=Just ("Cyclone V",
+                                                       Just "5CSXFC6D6F31C6"),
                                -- Possibility for Pin Assignments
-                               pinAssigs=[("in[0]", "PIN_N25"),  -- SW0
-                                          ("in[1]", "PIN_N26"),  -- SW1
-                                          ("in[2]", "PIN_P25"),  -- SW2
-                                          ("in[3]", "PIN_AE14"), -- SW3
-                                          ("in[4]", "PIN_AF14"), -- SW4
-                                          ("in[5]", "PIN_AD13"), -- SW5
-                                          ("in[6]", "PIN_AC13"), -- SW6
-                                          ("in[7]", "PIN_C13"),  -- SW7
-                                          ("out[6]","PIN_AF10"), -- HEX0[0]
-                                          ("out[5]","PIN_AB12"), -- HEX0[1]
-                                          ("out[4]","PIN_AC12"), -- HEX0[2]
-                                          ("out[3]","PIN_AD11"), -- HEX0[3]
-                                          ("out[2]","PIN_AE11"), -- HEX0[4]
-                                          ("out[1]","PIN_V14"),  -- HEX0[5]
-                                          ("out[0]","PIN_V13")   -- HEX0[6]
+                               pinAssigs=[("in[0]", "PIN_AB30"),  -- SW0
+                                          ("in[1]", "PIN_Y27"),   -- SW1
+                                          ("in[2]", "PIN_AB28"),  -- SW2
+                                          ("in[3]", "PIN_AC30"),  -- SW3
+                                          ("in[4]", "PIN_W25"),   -- SW4
+                                          ("in[5]", "PIN_V25"),   -- SW5
+                                          ("in[6]", "PIN_AC28"),  -- SW6
+                                          ("in[7]", "PIN_AD30"),  -- SW7
+                                          ("out[6]","PIN_W17"),   -- HEX0[0]
+                                          ("out[5]","PIN_V18"),   -- HEX0[1]
+                                          ("out[4]","PIN_AG17"),  -- HEX0[2]
+                                          ("out[3]","PIN_AG16"),  -- HEX0[3]
+                                          ("out[2]","PIN_AH17"),  -- HEX0[4]
+                                          ("out[1]","PIN_AG18"),  -- HEX0[5]
+                                          ("out[0]","PIN_AH18")   -- HEX0[6]
                                          ]
                               }
