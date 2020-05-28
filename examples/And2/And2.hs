@@ -5,7 +5,6 @@
 module AND2 (and2Sys) where
 
 import ForSyDe.Deep
-import Data.Int
 import Data.Bits
 
 and2Fun :: ProcFun (Bit -> Bit -> Bit)

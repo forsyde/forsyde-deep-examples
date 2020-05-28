@@ -23,13 +23,19 @@ systemProc run = (run_5, sevenSeg_5, sevenSeg_9)
       (run_9, counter_9_Out) = (unzipSY "unzip_9" . instantiate "counter_9" counter_9_Sys) run
       
 
-system :: SysDef (Signal Run -> (Signal Bit, Signal (FSVec D7 Bit), Signal (FSVec D7 Bit)))
-system = newSysDef systemProc "system" ["run"] ["run_5", "sevenseg_5", "sevenseg_9"]
+counter_59_Sys :: SysDef (Signal Run -> (Signal Bit, Signal (FSVec D7 Bit), Signal (FSVec D7 Bit)))
+counter_59_Sys = newSysDef systemProc "counter_59" ["run"] ["maxvalue", "sevenseg_5", "sevenseg_9"]
 
 
--- Hardware Generation
-compileQuartus_CounterSystem :: IO ()
-compileQuartus_CounterSystem = writeVHDLOps vhdlOps system
+-- ==> Simulation with Modelsim
+simulateModelsim :: [Bit] -> IO ([Bit], [FSVec D7 Bit], [FSVec D7 Bit])
+simulateModelsim = writeAndModelsimVHDL Nothing counter_59_Sys
+
+-- ==> Hardware Generation
+-- IMPORTANT: Programming the DE10 Standard:
+-- > quartus_pgm -c DE-SoC -m JTAG -o "p;./counter_59/vhdl/counter_59.sof@2"
+generateHW_DE_10_Standard :: IO ()
+generateHW_DE_10_Standard = writeVHDLOps vhdlOps counter_59_Sys
  where vhdlOps = defaultVHDLOps{execQuartus=Just quartusOps}
        quartusOps = QuartusOps{action=FullCompilation,
                                fMax=Just 50, -- in MHz
@@ -53,9 +59,7 @@ compileQuartus_CounterSystem = writeVHDLOps vhdlOps system
                                           ("sevenseg_5[2]","PIN_AE18"), -- HEX1[4]
                                           ("sevenseg_5[1]","PIN_AE17"),  -- HEX1[5]
                                           ("sevenseg_5[0]","PIN_V17"),   -- HEX1[6]
-                                          ("run_5", "PIN_AA24") -- LEDR[0]
+                                          ("maxvalue", "PIN_AA24") -- LEDR[0]
                                          ]
                               }
 
--- Modelsim
-testModelsim = writeAndModelsimVHDL Nothing counter_5_Sys [H,H,H]
