@@ -21,3 +21,17 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 *~
+/examples/VendingMachine_Mealy/VendingMachine/
+/examples/VendingMachine_Moore/VendingMachine/
+\#*
+/examples/And2/And2Sys/
+/examples/Counter_59/Counter_5/
+/examples/Counter_59/counter_59/
+/examples/Counter_59/sevenSegDec/
+/examples/Counter_59/system/
+/examples/Delay/DelaySys/
+/examples/Switch/SwitchSys/
+/examples/Switch/switchSys/
+transcript
+/stack.yaml.lock
+/work-obj93.cf
