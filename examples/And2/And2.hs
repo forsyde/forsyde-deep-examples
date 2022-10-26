@@ -58,5 +58,27 @@ generateHW_DE_10_Standard = writeVHDLOps vhdlOps and2Sys
                                           ("y", "PIN_AA24")   -- LEDR[0]
                                          ]
                               }
+generateHW_DE2_115 :: IO ()
+generateHW_DE2_115 = writeVHDLOps vhdlOps and2Sys
+ where vhdlOps = defaultVHDLOps{execQuartus=Just quartusOps}
+       quartusOps = QuartusOps{action=FullCompilation,
+                               fMax=Just 24, -- in MHz
+                               fpgaFamiliyDevice=Just ("Cyclone IV",
+                                                       Just "EP4CE115F29C7"),
+                               -- Possibility for Pin Assignments
+                               pinAssigs=[
+                                          ("a", "PIN_AB28"),  -- SW0
+                                          ("b", "PIN_AC28"),  -- SW1
+                                          -- ("clock","PIN_Y2"),    -- KEY[0]
+                                          -- ("out[6]","PIN_G18"),   -- HEX0[0]
+                                          -- ("out[5]","PIN_F22"),   -- HEX0[1]
+                                          -- ("out[4]","PIN_E17"),  -- HEX0[2]
+                                          -- ("out[3]","PIN_L26"),  -- HEX0[3]
+                                          -- ("out[2]","PIN_L25"),  -- HEX0[4]
+                                          -- ("out[1]","PIN_J22"),  -- HEX0[5]
+                                          -- ("out[0]","PIN_H22"),  -- HEX0[6]
+                                          ("y", "PIN_G19")   -- LEDR[0]
+                                         ]
+                              }
                              
 
