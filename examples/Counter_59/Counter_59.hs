@@ -23,7 +23,7 @@ systemProc run = (run_5, sevenSeg_5, sevenSeg_9)
       (run_9, counter_9_Out) = (unzipSY "unzip_9" . instantiate "counter_9" counter_9_Sys) run
       
 
-counter_59_Sys ::g SysDef (Signal Run -> (Signal Bit, Signal (FSVec D7 Bit), Signal (FSVec D7 Bit)))
+counter_59_Sys :: SysDef (Signal Run -> (Signal Bit, Signal (FSVec D7 Bit), Signal (FSVec D7 Bit)))
 counter_59_Sys = newSysDef systemProc "counter_59" ["run"] ["maxvalue", "sevenseg_5", "sevenseg_9"]
 
 
@@ -62,7 +62,6 @@ generateHW_DE_10_Standard = writeVHDLOps vhdlOps counter_59_Sys
                                           ("maxvalue", "PIN_AA24") -- LEDR[0]
                                          ]
                               }
-
 -- ==> Hardware Generation
 -- IMPORTANT: Programming the DE2-35:
 -- > nios2-configure-sof counter_59.sof"
@@ -94,5 +93,4 @@ generateHW_DE2_35= writeVHDLOps vhdlOps counter_59_Sys
                                           ("maxvalue", "PIN_AE23") -- LEDR[0]
                                          ]
                               }
-
 
